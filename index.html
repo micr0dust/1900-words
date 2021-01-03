@@ -27,7 +27,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button id="stop" class="btn btn-danger" onclick="random()">隨機排序</button>
+                <button id="stop" class="btn btn-danger" onclick="random(omin.value,omax.value)">隨機排序</button>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -39,13 +39,16 @@
     <div style="font-size: 15vmin;font-weight:bold;">
         <p id="vocabulary">occur</p>
     </div>
+    <div class="limite">
+        <input type="text" id="min" placeholder="min" value="0">
+        <input type="text" id="max" placeholder="max">
+    </div>
 
     <script language="JavaScript">
         let num=0;
         var list = [];
         var text = document.getElementById("vocabulary");
         var pre_list = [];
-
 
         pre_list = [
             "vocabulary",
@@ -73,20 +76,59 @@
             "respect",
             "admire",
             "worship",
+            "appreciate",
+            "impress",
+            "regard",
+            "reward",
+            "congratulate",
+            "greet",
+            "consider",
+            "conceive",
+            "glance",
+            "stare",
+            "gaze",
+            "please",
+            "prefer",
+            "satisfy",
+            "relate",
+            "refer",
+            "concern",
+            "depend",
+            "rely",
+            "lean",
+            "add",
+            "demand",
+            "claim",
+            "require",
+            "insist",
+            "persist",
+            "offer",
+            "provide",
+            "supply",
             
         ];
-        random();
+        let imin,imax;
+        let omin=document.getElementById("min");
+        let omax=document.getElementById("max");
+        random(omin.value,omax.value);
         function random(min, max) {
             var arr1 = [];
-            console.log(arr1);
-            for (var i = 0; i < pre_list.length; i++) {
+            console.log(max)
+            min=parseInt(min);
+            max=parseInt(max);
+            if(!min) min=0;
+            if(!max) max=pre_list.length
+            imin=min;
+            imax=max;
+            for (var i = min; i < max; i++) {
                 arr1[i] = i;
             }
             shuffleArray(arr1);
-            for (var i = 0; i < pre_list.length; i++) {
+            for (var i = min; i < max; i++) {
                 list[arr1[i]] = pre_list[i];
             }
             console.log(list);
+            num=min;
             text.innerHTML = list[num];
         }
         function shuffleArray(inputArray) {
@@ -94,12 +136,12 @@
         }
         function next(){
             num++;
-            if(num===pre_list.length) num=0;
+            if(num===imax) num=0;
             text.innerHTML = list[num];
         }
         function privous(){
             num--;
-            if(num===-1) num=pre_list.length-1;
+            if(num===imin-1) num=imax-1;
             text.innerHTML = list[num];
         }
     </script>

@@ -32,6 +32,11 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
+                <button id="stop" class="btn btn-primary" onclick="number()">編號查詢</button>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
                 <button id="install" class="btn btn-success" onclick="next()">下一個</button>
             </li>
         </ul>
@@ -40,110 +45,65 @@
         <p id="vocabulary">occur</p>
     </div>
     <div class="limite">
-        <input type="text" id="min" placeholder="min" value="0">
+        <input type="text" id="min" placeholder="min">
         <input type="text" id="max" placeholder="max">
     </div>
-
+    <script src="./words.js"></script>
     <script language="JavaScript">
-        let num=0;
+        let num = 0;
         var list = [];
+        var arr2 = [];
         var text = document.getElementById("vocabulary");
-        var pre_list = [];
-
-        pre_list = [
-            "vocabulary",
-            "succeed",
-            "fail",
-            "enter",
-            "graduate",
-            "achieve",
-            "accomplish",
-            "fulfill",
-            "attain",
-            "perform",
-            "advance",
-            "found",
-            "establish",
-            "organize",
-            "compose",
-            "constitute",
-            "allow",
-            "permit",
-            "accept",
-            "admit",
-            "recognize",
-            "notice",
-            "respect",
-            "admire",
-            "worship",
-            "appreciate",
-            "impress",
-            "regard",
-            "reward",
-            "congratulate",
-            "greet",
-            "consider",
-            "conceive",
-            "glance",
-            "stare",
-            "gaze",
-            "please",
-            "prefer",
-            "satisfy",
-            "relate",
-            "refer",
-            "concern",
-            "depend",
-            "rely",
-            "lean",
-            "add",
-            "demand",
-            "claim",
-            "require",
-            "insist",
-            "persist",
-            "offer",
-            "provide",
-            "supply",
-            
-        ];
-        let imin,imax;
-        let omin=document.getElementById("min");
-        let omax=document.getElementById("max");
-        random(omin.value,omax.value);
+        let imin, imax;
+        let omin = document.getElementById("min");
+        let omax = document.getElementById("max");
+        random(omin.value, omax.value);
         function random(min, max) {
             var arr1 = [];
-            console.log(max)
-            min=parseInt(min);
-            max=parseInt(max);
-            if(!min) min=0;
-            if(!max) max=pre_list.length
-            imin=min;
-            imax=max;
-            for (var i = min; i < max; i++) {
+            arr2 = [];
+            list = [];
+            //console.log(max)
+            min = parseInt(min);
+            max = parseInt(max);
+            if (!min) min = 0;
+            if (!max) max = pre_list.length
+            imin = min;
+            imax = max;
+            for (var i = 0; i < max - min + 1; i++) {
                 arr1[i] = i;
             }
             shuffleArray(arr1);
-            for (var i = min; i < max; i++) {
-                list[arr1[i]] = pre_list[i];
+            //console.log(arr1);
+            for (var i = 0; i < max - min + 1; i++) {
+                list[arr1[i]] = pre_list[min + i];
+                arr2[arr1[i]] = i;
             }
-            console.log(list);
-            num=min;
+            //console.log(arr1,arr2);
+            num = 0;
             text.innerHTML = list[num];
         }
         function shuffleArray(inputArray) {
             inputArray.sort(() => Math.random() - 0.5);
         }
-        function next(){
+        function next() {
             num++;
-            if(num===imax) num=0;
+            if (num > imax - imin) num = 0;
+
             text.innerHTML = list[num];
         }
-        function privous(){
+        function privous() {
             num--;
-            if(num===imin-1) num=imax-1;
+            if (num < 0) num = imax - imin;
             text.innerHTML = list[num];
         }
+        function number(){
+            alert(arr2[num]+imin)
+        }
+        window.addEventListener('keydown', function (e) {
+            if (e.keyCode===39) next();
+            if (e.keyCode===37) privous();
+            if (e.keyCode===82) random(omin.value, omax.value);
+        }, false);
     </script>
 </body>
 

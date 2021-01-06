@@ -97,7 +97,8 @@
             text.innerHTML = list[num];
         }
         function number(){
-            alert(arr2[num]+imin)
+            if(arr2[num]+imin<301) return alert(arr2[num]+imin);
+            if(arr2[num]+imin>300) return alert(arr2[num]+imin+1099);
         }
         window.addEventListener('keydown', function (e) {
             if (e.keyCode===39) next();

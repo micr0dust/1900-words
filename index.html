@@ -14,11 +14,34 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>依舊冷冷</title>
     <style>
+        #oProgress {
+            position: relative;
+            width: 100%;
+            height: 30px;
+            background-color: grey;
+        }
 
+        #oBar {
+            position: absolute;
+            width: 1%;
+            height: 100%;
+            background-color: green;
+        }
+
+        #label {
+            text-align: right;
+            line-height: 30px;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
+    <div id="oProgress">
+        <div class="nav-item" id="oBar">
+            <div id="label"></div>
+        </div>
+    </div>
     <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white fixed-bottom">
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -54,7 +77,10 @@
         var list = [];
         var arr2 = [];
         var text = document.getElementById("vocabulary");
-        let imin, imax;
+        var elem = document.getElementById("oBar");
+        var width = 1;
+        let imin = 0;
+        let imax = pre_list.length;
         let omin = document.getElementById("min");
         let omax = document.getElementById("max");
         random(omin.value, omax.value);
@@ -66,7 +92,7 @@
             min = parseInt(min);
             max = parseInt(max);
             if (!min) min = 0;
-            if (!max) max = pre_list.length
+            if (!max) max = pre_list.length;
             imin = min;
             imax = max;
             for (var i = 0; i < max - min + 1; i++) {
@@ -81,30 +107,42 @@
             //console.log(arr1,arr2);
             num = 0;
             text.innerHTML = list[num];
+            width = 1;
+            elem.style.width = 100 * (width / (imax - imin + 1)) + '%';
+            document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin + 1) + ") ";
         }
         function shuffleArray(inputArray) {
             inputArray.sort(() => Math.random() - 0.5);
         }
         function next() {
             num++;
-            if (num > imax - imin) num = 0;
-
+            if (num > imax - imin) return num = imax - imin;
             text.innerHTML = list[num];
+            move(1)
         }
         function privous() {
             num--;
-            if (num < 0) num = imax - imin;
+            if (num < 0) return num = 0;
             text.innerHTML = list[num];
+            move(-1)
         }
-        function number(){
-            if(arr2[num]+imin<301) return alert(arr2[num]+imin);
-            if(arr2[num]+imin>300) return alert(arr2[num]+imin+1099);
+        function number() {
+            if (arr2[num] + imin < 301) return alert(arr2[num] + imin);
+            if (arr2[num] + imin > pre_list.length - 101) return alert(arr2[num] + imin + 1400 - pre_list.length + 101);
         }
         window.addEventListener('keydown', function (e) {
-            if (e.keyCode===39) next();
-            if (e.keyCode===37) privous();
-            if (e.keyCode===82) random(omin.value, omax.value);
+            //console.log(e.keyCode);
+            if (e.keyCode === 39) next();
+            if (e.keyCode === 37) privous();
+            if (e.keyCode === 32) number();
+            if (e.keyCode === 82) random(omin.value, omax.value);
         }, false);
+        function move(add) {
+            width += add;
+            elem.style.width = 100 * (width / (imax - imin + 1)) + '%';
+            document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin + 1) + ") ";
+            if (width >= (imax - imin+1)) document.getElementById("label").innerHTML = "達標! ";
+        }
     </script>
 </body>
 

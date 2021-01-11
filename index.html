@@ -37,11 +37,13 @@
 </head>
 
 <body>
-    <div id="oProgress">
-        <div class="nav-item" id="oBar">
-            <div id="label"></div>
+    <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white fixed-topm">
+        <div id="oProgress">
+            <div class="nav-item" id="oBar">
+                <div id="label"></div>
+            </div>
         </div>
-    </div>
+    </nav>
     <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white fixed-bottom">
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -74,11 +76,12 @@
     <script src="./words.js"></script>
     <script language="JavaScript">
         let num = 0;
-        var list = [];
-        var arr2 = [];
+        let list = [];
+        let arr2 = [];
         var text = document.getElementById("vocabulary");
         var elem = document.getElementById("oBar");
-        var width = 1;
+        let testValue;
+        let width = 1;
         let imin = 0;
         let imax = pre_list.length;
         let omin = document.getElementById("min");
@@ -89,12 +92,17 @@
             arr2 = [];
             list = [];
             //console.log(max)
-            min = parseInt(min);
-            max = parseInt(max);
-            if (!min) min = 0;
+            min = Math.abs(parseInt(min));
+            max = Math.abs(parseInt(max));
+            if (!min) min = 1;
             if (!max) max = pre_list.length;
-            imin = min;
-            imax = max;
+            imin = parseInt(min);
+            imax = parseInt(max);
+            if(imin>imax){
+                testValue = imax;
+                imax=imin;
+                imin=testValue;
+            }
             for (var i = 0; i < max - min + 1; i++) {
                 arr1[i] = i;
             }
@@ -141,7 +149,7 @@
             width += add;
             elem.style.width = 100 * (width / (imax - imin + 1)) + '%';
             document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin + 1) + ") ";
-            if (width >= (imax - imin+1)) document.getElementById("label").innerHTML = "達標! ";
+            if (width >= (imax - imin + 1)) document.getElementById("label").innerHTML = "達標! ";
         }
     </script>
 </body>

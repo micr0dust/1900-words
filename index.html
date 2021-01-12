@@ -37,32 +37,39 @@
 </head>
 
 <body>
-    <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white fixed-topm">
+    <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white">
         <div id="oProgress">
             <div class="nav-item" id="oBar">
                 <div id="label"></div>
             </div>
         </div>
     </nav>
+    <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <button class="btn btn-danger" onclick="random(omin.value,omax.value)">隨機排序</button>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <button id="olist" class="btn btn-warning" onclick="fnWordList()">紀錄</button>
+            </li>
+        </ul>
+    </nav>
     <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white fixed-bottom">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <button id="install" class="btn btn-success" onclick="privous()">上一個</button>
+                <button class="btn btn-success" onclick="privous()">上一個</button>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button id="stop" class="btn btn-danger" onclick="random(omin.value,omax.value)">隨機排序</button>
+                <button class="btn btn-primary" onclick="alert(number())">編號查詢</button>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button id="stop" class="btn btn-primary" onclick="number()">編號查詢</button>
-            </li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <button id="install" class="btn btn-success" onclick="next()">下一個</button>
+                <button class="btn btn-success" onclick="next()">下一個</button>
             </li>
         </ul>
     </nav>
@@ -73,6 +80,7 @@
         <input type="text" id="min" placeholder="min">
         <input type="text" id="max" placeholder="max">
     </div>
+    <div id="oWordList"></div>
     <script src="./words.js"></script>
     <script language="JavaScript">
         let num = 0;
@@ -81,11 +89,13 @@
         var text = document.getElementById("vocabulary");
         var elem = document.getElementById("oBar");
         let testValue;
+        let strList = "";
         let width = 1;
         let imin = 0;
         let imax = pre_list.length;
         let omin = document.getElementById("min");
         let omax = document.getElementById("max");
+        let wordList = [];
         random(omin.value, omax.value);
         function random(min, max) {
             var arr1 = [];
@@ -98,17 +108,17 @@
             if (!max) max = pre_list.length;
             imin = parseInt(min);
             imax = parseInt(max);
-            if(imin>imax){
+            if (imin > imax) {
                 testValue = imax;
-                imax=imin;
-                imin=testValue;
+                imax = imin;
+                imin = testValue;
             }
-            for (var i = 0; i < max - min + 1; i++) {
+            for (var i = 0; i < max - min; i++) {
                 arr1[i] = i;
             }
             shuffleArray(arr1);
             //console.log(arr1);
-            for (var i = 0; i < max - min + 1; i++) {
+            for (var i = 0; i < max - min; i++) {
                 list[arr1[i]] = pre_list[min + i];
                 arr2[arr1[i]] = i;
             }
@@ -116,40 +126,73 @@
             num = 0;
             text.innerHTML = list[num];
             width = 1;
-            elem.style.width = 100 * (width / (imax - imin + 1)) + '%';
-            document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin + 1) + ") ";
+            elem.style.width = 100 * (width / (imax - imin)) + '%';
+            document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin) + ") ";
         }
         function shuffleArray(inputArray) {
             inputArray.sort(() => Math.random() - 0.5);
         }
         function next() {
             num++;
-            if (num > imax - imin) return num = imax - imin;
+            if (num >= imax - imin) num = imax - imin - 1;
+            obutton();
             text.innerHTML = list[num];
+            if (num >= imax - imin) return;
             move(1)
         }
         function privous() {
             num--;
-            if (num < 0) return num = 0;
+            if (num < 0) num = 0;
+            obutton();
             text.innerHTML = list[num];
+            if (num < 0) return;
             move(-1)
         }
         function number() {
-            if (arr2[num] + imin < 301) return alert(arr2[num] + imin);
-            if (arr2[num] + imin > pre_list.length - 101) return alert(arr2[num] + imin + 1400 - pre_list.length + 101);
+            if (arr2[num] + imin < pre_list.length - 100) return arr2[num] + imin;
+            if (arr2[num] + imin > pre_list.length - 101) return arr2[num] + imin + 1400 - pre_list.length + 101;
         }
         window.addEventListener('keydown', function (e) {
             //console.log(e.keyCode);
             if (e.keyCode === 39) next();
             if (e.keyCode === 37) privous();
-            if (e.keyCode === 32) number();
+            if (e.keyCode === 32) alert(number());
             if (e.keyCode === 82) random(omin.value, omax.value);
+            if (e.keyCode === 77) fnWordList();
         }, false);
         function move(add) {
             width += add;
-            elem.style.width = 100 * (width / (imax - imin + 1)) + '%';
-            document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin + 1) + ") ";
-            if (width >= (imax - imin + 1)) document.getElementById("label").innerHTML = "達標! ";
+            elem.style.width = 100 * (width / (imax - imin)) + '%';
+            document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin) + ") ";
+            if (width >= (imax - imin)) document.getElementById("label").innerHTML = "達標! ";
+        }
+        function fnWordList() {
+            let word = "["+number()+"]"+pre_list[arr2[num] + imin];
+            //console.log(word)
+            //console.log(wordList.indexOf(word))
+            if (wordList.indexOf(word)+1) {
+                wordList.splice(wordList.indexOf(word), 1);
+                print();
+                obutton();
+            } else {
+                wordList.push(word);
+                //console.log(wordList.indexOf(word))
+                print();
+                obutton();
+            }
+
+        }
+        function obutton() {
+            if (wordList.indexOf(pre_list[arr2[num] + imin])+1) return document.getElementById('olist').innerHTML = "刪除";
+            document.getElementById('olist').innerHTML = "紀錄";
+        }
+        function print(){
+            strList = "";
+                for (let i = 0; i < wordList.length; i++) {
+                    const element = wordList[i];
+                    strList += wordList[i] + "<br>";
+                }
+                document.getElementById('oWordList').innerHTML = strList;
         }
     </script>
 </body>

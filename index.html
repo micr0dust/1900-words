@@ -33,6 +33,12 @@
             line-height: 30px;
             color: white;
         }
+
+        #oWordList {
+            width: 100%;
+            height: 200px;
+            overflow: auto;
+        }
     </style>
 </head>
 
@@ -45,14 +51,19 @@
         </div>
     </nav>
     <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav">
             <li class="nav-item">
-                <button class="btn btn-danger" onclick="random(omin.value,omax.value)">隨機排序</button>
+                <button class="btn btn-danger" onclick="print(true)">清除所有標記</button>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button id="olist" class="btn btn-warning" onclick="fnWordList()">紀錄</button>
+                <button class="btn btn-info" onclick="random(omin.value,omax.value)">隨機排序</button>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <button id="olist" class="btn btn-warning" onclick="fnWordList()">標記此字</button>
             </li>
         </ul>
     </nav>
@@ -74,7 +85,7 @@
         </ul>
     </nav>
     <div style="font-size: 15vmin;font-weight:bold;">
-        <p id="vocabulary">occur</p>
+        <p id="vocabulary"></p>
     </div>
     <div class="limite">
         <input type="text" id="min" placeholder="min">
@@ -96,6 +107,7 @@
         let omin = document.getElementById("min");
         let omax = document.getElementById("max");
         let wordList = [];
+        let word;
         random(omin.value, omax.value);
         function random(min, max) {
             var arr1 = [];
@@ -107,18 +119,18 @@
             if (!min) min = 1;
             if (!max) max = pre_list.length;
             imin = parseInt(min);
-            imax = parseInt(max);
+            imax = parseInt(max)+1;
             if (imin > imax) {
                 testValue = imax;
                 imax = imin;
                 imin = testValue;
             }
-            for (var i = 0; i < max - min; i++) {
+            for (var i = 0; i < imax - imin; i++) {
                 arr1[i] = i;
             }
             shuffleArray(arr1);
             //console.log(arr1);
-            for (var i = 0; i < max - min; i++) {
+            for (var i = 0; i < imax - imin; i++) {
                 list[arr1[i]] = pre_list[min + i];
                 arr2[arr1[i]] = i;
             }
@@ -128,25 +140,26 @@
             width = 1;
             elem.style.width = 100 * (width / (imax - imin)) + '%';
             document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin) + ") ";
+            if (width >= (imax - imin)) document.getElementById("label").innerHTML = "達標! ";
         }
         function shuffleArray(inputArray) {
             inputArray.sort(() => Math.random() - 0.5);
         }
         function next() {
-            num++;
-            if (num >= imax - imin) num = imax - imin - 1;
-            obutton();
+            if (num < imax - imin-1){
+                num++;
+                obutton();
+                move(1);
+            }
             text.innerHTML = list[num];
-            if (num >= imax - imin) return;
-            move(1)
         }
         function privous() {
-            num--;
-            if (num < 0) num = 0;
-            obutton();
+            if (num > 0) {
+                num--;
+                obutton();
+                move(-1);
+            }
             text.innerHTML = list[num];
-            if (num < 0) return;
-            move(-1)
         }
         function number() {
             if (arr2[num] + imin < pre_list.length - 100) return arr2[num] + imin;
@@ -167,10 +180,10 @@
             if (width >= (imax - imin)) document.getElementById("label").innerHTML = "達標! ";
         }
         function fnWordList() {
-            let word = "["+number()+"]"+pre_list[arr2[num] + imin];
+            word = "[" + number() + "]" + pre_list[arr2[num] + imin];
             //console.log(word)
             //console.log(wordList.indexOf(word))
-            if (wordList.indexOf(word)+1) {
+            if (wordList.indexOf(word) + 1) {
                 wordList.splice(wordList.indexOf(word), 1);
                 print();
                 obutton();
@@ -183,16 +196,17 @@
 
         }
         function obutton() {
-            if (wordList.indexOf(pre_list[arr2[num] + imin])+1) return document.getElementById('olist').innerHTML = "刪除";
-            document.getElementById('olist').innerHTML = "紀錄";
+            word = "[" + number() + "]" + pre_list[arr2[num] + imin];
+            if (wordList.indexOf(word) + 1) return document.getElementById('olist').innerHTML = "取消標記";
+            document.getElementById('olist').innerHTML = "標記";
         }
-        function print(){
+        function print(clear) {
+            if (clear) wordList = [];
             strList = "";
-                for (let i = 0; i < wordList.length; i++) {
-                    const element = wordList[i];
-                    strList += wordList[i] + "<br>";
-                }
-                document.getElementById('oWordList').innerHTML = strList;
+            for (let i = wordList.length-1; i >= 0; i--) {
+                strList += wordList[i] + "<br>";
+            }
+            document.getElementById('oWordList').innerHTML = strList;
         }
     </script>
 </body>

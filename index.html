@@ -75,7 +75,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button class="btn btn-primary" onclick="alert(number())">編號查詢</button>
+                <button class="btn btn-primary" onclick="speak()">發音</button>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -91,6 +91,7 @@
         <input type="text" id="min" placeholder="min">
         <input type="text" id="max" placeholder="max">
     </div>
+    <div><audio id="oSpeak"></audio></div>
     <div id="oWordList"></div>
     <script src="./words.js"></script>
     <script language="JavaScript">
@@ -117,9 +118,9 @@
             min = Math.abs(parseInt(min));
             max = Math.abs(parseInt(max));
             if (!min) min = 1;
-            if (!max) max = pre_list.length;
+            if (!max) max = pre_list.length-1;
             imin = parseInt(min);
-            imax = parseInt(max)+1;
+            imax = parseInt(max) + 1;
             if (imin > imax) {
                 testValue = imax;
                 imax = imin;
@@ -146,7 +147,7 @@
             inputArray.sort(() => Math.random() - 0.5);
         }
         function next() {
-            if (num < imax - imin-1){
+            if (num < imax - imin - 1) {
                 num++;
                 obutton();
                 move(1);
@@ -169,7 +170,7 @@
             //console.log(e.keyCode);
             if (e.keyCode === 39) next();
             if (e.keyCode === 37) privous();
-            if (e.keyCode === 32) alert(number());
+            if (e.keyCode === 86) speak();
             if (e.keyCode === 82) random(omin.value, omax.value);
             if (e.keyCode === 77) fnWordList();
         }, false);
@@ -203,7 +204,7 @@
         function print(clear) {
             if (clear) wordList = [];
             strList = "";
-            for (let i = wordList.length-1; i >= 0; i--) {
+            for (let i = wordList.length - 1; i >= 0; i--) {
                 strList += wordList[i] + "<br>";
             }
             document.getElementById('oWordList').innerHTML = strList;

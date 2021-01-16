@@ -118,7 +118,7 @@
             min = Math.abs(parseInt(min));
             max = Math.abs(parseInt(max));
             if (!min) min = 1;
-            if (!max) max = pre_list.length-1;
+            if (!max) max = pre_list.length - 1;
             imin = parseInt(min);
             imax = parseInt(max) + 1;
             if (imin > imax) {
@@ -208,6 +208,14 @@
                 strList += wordList[i] + "<br>";
             }
             document.getElementById('oWordList').innerHTML = strList;
+        }
+        function speak() {
+            let audio = document.getElementById('oSpeak');
+            let body = audio.body;
+            let reqword = text.innerHTML
+            if (!reqword) reqword = "What the heck is that?"
+            audio.src = "https://translate.google.com/translate_tts?chrome=UTF-8&tl=en&client=tw-ob&ttsspeed=1&q=" + reqword;
+            audio.autoplay = true;
         }
     </script>
 </body>

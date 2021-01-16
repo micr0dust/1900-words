@@ -209,14 +209,46 @@
             }
             document.getElementById('oWordList').innerHTML = strList;
         }
-        function speak() {
+        function fnspeak() {
             let audio = document.getElementById('oSpeak');
             let body = audio.body;
-            let reqword = text.innerHTML
-            if (!reqword) reqword = "What the heck is that?"
+            let reqword = text.innerHTML;
+            if (!reqword) reqword = "What the heck is that?";
             //audio.src = "https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&ttsspeed=1&q=" + reqword;
-            audio.src = "http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&textlen=32&client=tw-ob&tl=en-gb&q=" + reqword;
             audio.autoplay = true;
+            var msg = new SpeechSynthesisUtterance();
+            msg.text = reqword;
+            window.speechSynthesis.speak(msg);
+        }
+        function speak() {
+            let reqword = text.innerHTML;
+            if (!reqword) reqword = "What the heck is that?";
+            const synth = window.speechSynthesis;
+            const speak = (msg) => {
+                let u = new SpeechSynthesisUtterance();
+                u.text = msg;
+                let voices = synth.getVoices();
+
+                for (let index = 0; index < voices.length; index++) {
+                    /*
+                    "Google US English"
+                    "Google 日本語"
+                    "Google 普通话（中国大陆）"
+                    "Google 粤語（香港）"
+                    "Google 國語（臺灣）"
+                    */
+                    //console.log(this.voices[index].name);
+                    if (voices[index].name == "Google US English") {
+                        u.voice = voices[index];
+                        break;
+                    } else {
+                        u.lang = 'en';
+                    }
+                }
+                synth.speak(u);
+            };
+
+            speak(reqword);
         }
     </script>
 </body>

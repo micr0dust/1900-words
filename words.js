@@ -1001,11 +1001,3 @@ var pre_list = [    "vocabulary", "succeed",
     "suicide",
     "funeral"
 ];
-function speak() {
-    let audio = document.getElementById('oSpeak');
-    let body = audio.body;
-    let reqword = text.innerHTML
-    if (!reqword) reqword = "What the heck is that?"
-    audio.src = "https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&ttsspeed=1&q=" + reqword;
-    audio.autoplay = true;
-}

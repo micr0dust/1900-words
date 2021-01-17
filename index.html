@@ -77,7 +77,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button id="oSound" class="btn btn-primary" onclick="speak(true)">發音[OFF]</button>
+                <button id="oSound" class="btn btn-primary" onclick="speak(true)">已靜音</button>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -266,7 +266,7 @@
         }
         function obutton() {
             word = "[" + number() + "]" + pre_list[arr2[num] + imin];
-            if (wordList.indexOf(word) + 1) return document.getElementById('olist').innerHTML = "取消標記";
+            if (wordList.indexOf(word) + 1) return document.getElementById('olist').innerHTML = "取消";
             document.getElementById('olist').innerHTML = "標記";
         }
         function print(clear) {

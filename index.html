@@ -119,13 +119,13 @@
             max = Math.abs(parseInt(max));
             if (!min) min = 1;
             if (!max) max = pre_list.length - 1;
-            imin = parseInt(min);
-            imax = parseInt(max) + 1;
-            if (imin > imax) {
-                testValue = imax;
-                imax = imin;
-                imin = testValue;
+            if (min > max) {
+                testValue = max;
+                max = min;
+                min = testValue;
             }
+            imin = min;
+            imax = max + 1;
             for (var i = 0; i < imax - imin; i++) {
                 arr1[i] = i;
             }
@@ -173,6 +173,14 @@
             if (e.keyCode === 86) speak();
             if (e.keyCode === 82) random(omin.value, omax.value);
             if (e.keyCode === 77) fnWordList();
+        }, false);
+        window.addEventListener('click',function (e){
+            let posX = event.clientX;
+            let maxX = document.body.clientWidth;
+            let posY = event.clientY;
+            let maxY = document.body.clientHeight;
+            if((maxX/posX>2)&&(maxY/posY>0.75)&&(maxY/posY<1.5)) privous();
+            if((maxX/posX<2)&&(maxY/posY>0.75)&&(maxY/posY<1.5)) next();
         }, false);
         function move(add) {
             width += add;

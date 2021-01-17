@@ -58,19 +58,14 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button class="btn btn-info" onclick="random(omin.value,omax.value)">隨機排序</button>
-            </li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <button id="olist" class="btn btn-warning" onclick="fnWordList()">標記此字</button>
+                <button id="oAutoSay" class="btn btn-success" onclick="fnAutoSay()">自動發音(OFF)</button>
             </li>
         </ul>
     </nav>
     <nav id="navbar" class="navbar navbar-expand-md bg-dark navbar-dark text-white fixed-bottom">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <button class="btn btn-success" onclick="privous()">上一個</button>
+                <button class="btn btn-info" onclick="random(omin.value,omax.value)">隨機排序</button>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -80,7 +75,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button class="btn btn-success" onclick="next()">下一個</button>
+                <button id="olist" class="btn btn-warning" onclick="fnWordList()">標記</button>
             </li>
         </ul>
     </nav>
@@ -109,6 +104,7 @@
         let omax = document.getElementById("max");
         let wordList = [];
         let word;
+        let autoSay=false;
         random(omin.value, omax.value);
         function random(min, max) {
             var arr1 = [];
@@ -152,7 +148,6 @@
                 obutton();
                 move(1);
             }
-            text.innerHTML = list[num];
         }
         function privous() {
             if (num > 0) {
@@ -160,7 +155,6 @@
                 obutton();
                 move(-1);
             }
-            text.innerHTML = list[num];
         }
         function number() {
             if (arr2[num] + imin < pre_list.length - 100) return arr2[num] + imin;
@@ -174,19 +168,77 @@
             if (e.keyCode === 82) random(omin.value, omax.value);
             if (e.keyCode === 77) fnWordList();
         }, false);
-        window.addEventListener('click',function (e){
+        window.addEventListener('click', function (e) {
             let posX = event.clientX;
             let maxX = document.body.clientWidth;
             let posY = event.clientY;
             let maxY = document.body.clientHeight;
-            if((maxX/posX>2)&&(maxY/posY>0.75)&&(maxY/posY<1.5)) privous();
-            if((maxX/posX<2)&&(maxY/posY>0.75)&&(maxY/posY<1.5)) next();
+            if ((maxX / posX > 2) && (maxY / posY > 0.75) && (maxY / posY < 1.5)) privous();
+            if ((maxX / posX < 2) && (maxY / posY > 0.75) && (maxY / posY < 1.5)) next();
+        }, false);
+        function getDirection(startx, starty, endx, endy) {
+            var angx = endx - startx;
+            var angy = endy - starty;
+            var result = 0;
+
+            //如果滑動距離太短
+            if (Math.abs(angx) < 2 && Math.abs(angy) < 2) {
+                return result;
+            }
+
+            var angle = getAngle(angx, angy);
+            if (angle >= -135 && angle <= -45) {
+                result = 1;
+            } else if (angle > 45 && angle < 135) {
+                result = 2;
+            } else if ((angle >= 135 && angle <= 180) || (angle >= -180 && angle < -135)) {
+                result = 3;
+            } else if (angle >= -45 && angle <= 45) {
+                result = 4;
+            }
+
+            return result;
+        }
+        function getAngle(angx, angy) {
+            return Math.atan2(angy, angx) * 180 / Math.PI;
+        };
+        //手指接觸螢幕
+        document.addEventListener("touchstart", function (e) {
+            startx = e.touches[0].pageX;
+            starty = e.touches[0].pageY;
+        }, false);
+        //手指離開螢幕
+        document.addEventListener("touchend", function (e) {
+            var endx, endy;
+            endx = e.changedTouches[0].pageX;
+            endy = e.changedTouches[0].pageY;
+            var direction = getDirection(startx, starty, endx, endy);
+            switch (direction) {
+                case 0:
+                    //no
+                    break;
+                case 1:
+                    speak();
+                    break;
+                case 2:
+                    //down
+                    break;
+                case 3:
+                    //left
+                    break;
+                case 4:
+                    //right
+                    break;
+                default:
+            }
         }, false);
         function move(add) {
             width += add;
             elem.style.width = 100 * (width / (imax - imin)) + '%';
             document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin) + ") ";
             if (width >= (imax - imin)) document.getElementById("label").innerHTML = "達標! ";
+            text.innerHTML = list[num];
+            if(autoSay) speak();
         }
         function fnWordList() {
             word = "[" + number() + "]" + pre_list[arr2[num] + imin];
@@ -216,17 +268,6 @@
                 strList += wordList[i] + "<br>";
             }
             document.getElementById('oWordList').innerHTML = strList;
-        }
-        function fnspeak() {
-            let audio = document.getElementById('oSpeak');
-            let body = audio.body;
-            let reqword = text.innerHTML;
-            if (!reqword) reqword = "What the heck is that?";
-            //audio.src = "https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&ttsspeed=1&q=" + reqword;
-            audio.autoplay = true;
-            var msg = new SpeechSynthesisUtterance();
-            msg.text = reqword;
-            window.speechSynthesis.speak(msg);
         }
 
         //感謝分享! https://gist.github.com/Eotones/d67be7262856a79a77abeeccef455ebf
@@ -259,6 +300,15 @@
             };
 
             speak(reqword);
+        }
+        function fnAutoSay(){
+            if (autoSay) {
+                autoSay=false;
+                document.getElementById('oAutoSay').innerHTML = "自動發音(OFF)";
+            }else{
+                autoSay=true;
+                document.getElementById('oAutoSay').innerHTML = "自動發音(ON)";
+            }
         }
     </script>
 </body>

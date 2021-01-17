@@ -283,10 +283,10 @@
             if (status) {
                 if (sound) {
                     sound = false;
-                    document.getElementById('oSound').innerHTML = "發音 [OFF]";
+                    document.getElementById('oSound').innerHTML = "已靜音";
                 } else {
                     sound = true;
-                    document.getElementById('oSound').innerHTML = "發音(上滑) [ON]";
+                    document.getElementById('oSound').innerHTML = "上滑發音";
                 }
             }
             if (!sound) return;
@@ -322,10 +322,10 @@
         function fnAutoSay() {
             if (autoSay) {
                 autoSay = false;
-                document.getElementById('oAutoSay').innerHTML = "自動發音(OFF)";
+                document.getElementById('oAutoSay').innerHTML = "自動發音[OFF]";
             } else {
                 autoSay = true;
-                document.getElementById('oAutoSay').innerHTML = "自動發音(ON)";
+                document.getElementById('oAutoSay').innerHTML = "自動發音[ON]";
             }
         }
         function operate() {

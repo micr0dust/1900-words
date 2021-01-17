@@ -12,6 +12,8 @@
         integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous">//bootstrap 4</script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <title>依舊冷冷</title>
     <style>
         #oProgress {
@@ -58,7 +60,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button id="oAutoSay" class="btn btn-success" onclick="fnAutoSay()">自動發音(OFF)</button>
+                <button class="btn btn-primary" onclick="operate()">操作</button>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <button id="oAutoSay" class="btn btn-success" onclick="fnAutoSay()">自動發音[OFF]</button>
             </li>
         </ul>
     </nav>
@@ -70,7 +77,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button class="btn btn-primary" onclick="speak()">發音</button>
+                <button id="oSound" class="btn btn-primary" onclick="speak(true)">發音[OFF]</button>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -104,7 +111,8 @@
         let omax = document.getElementById("max");
         let wordList = [];
         let word;
-        let autoSay=false;
+        let autoSay = false;
+        let sound = false;
         random(omin.value, omax.value);
         function random(min, max) {
             var arr1 = [];
@@ -238,7 +246,7 @@
             document.getElementById("label").innerHTML = "(" + width + "/" + (imax - imin) + ") ";
             if (width >= (imax - imin)) document.getElementById("label").innerHTML = "達標! ";
             text.innerHTML = list[num];
-            if(autoSay) speak();
+            if (autoSay) speak();
         }
         function fnWordList() {
             word = "[" + number() + "]" + pre_list[arr2[num] + imin];
@@ -271,7 +279,17 @@
         }
 
         //感謝分享! https://gist.github.com/Eotones/d67be7262856a79a77abeeccef455ebf
-        function speak() {
+        function speak(status) {
+            if (status) {
+                if (sound) {
+                    sound = false;
+                    document.getElementById('oSound').innerHTML = "發音 [OFF]";
+                } else {
+                    sound = true;
+                    document.getElementById('oSound').innerHTML = "發音(上滑) [ON]";
+                }
+            }
+            if (!sound) return;
             let reqword = text.innerHTML;
             if (!reqword) reqword = "What the heck is that?";
             const synth = window.speechSynthesis;
@@ -301,13 +319,51 @@
 
             speak(reqword);
         }
-        function fnAutoSay(){
+        function fnAutoSay() {
             if (autoSay) {
-                autoSay=false;
+                autoSay = false;
                 document.getElementById('oAutoSay').innerHTML = "自動發音(OFF)";
-            }else{
-                autoSay=true;
+            } else {
+                autoSay = true;
                 document.getElementById('oAutoSay').innerHTML = "自動發音(ON)";
+            }
+        }
+        function operate() {
+            if (detectmob()) {
+                Swal.fire({
+                    title: '上一個 [左滑]<br>下一個 [右滑]<br>發音 [上滑]',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                })
+            } else {
+                Swal.fire({
+                    title: '上一個 [⇽]<br>上一個 [⇾]<br>發音 [V]<br>標記 [M]<br>隨機排序 [R]',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                })
+            }
+        }
+        function detectmob() {
+            if (navigator.userAgent.match(/Android/i)
+                || navigator.userAgent.match(/webOS/i)
+                || navigator.userAgent.match(/iPhone/i)
+                || navigator.userAgent.match(/iPad/i)
+                || navigator.userAgent.match(/iPod/i)
+                || navigator.userAgent.match(/BlackBerry/i)
+                || navigator.userAgent.match(/Windows Phone/i)
+            ) {
+                return true;
+            }
+            else {
+                return false;
             }
         }
     </script>

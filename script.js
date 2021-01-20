@@ -65,8 +65,7 @@ function privous() {
     }
 }
 function number() {
-    if (arr2[num] + imin < pre_list.length - 100) return arr2[num] + imin;
-    if (arr2[num] + imin > pre_list.length - 101) return arr2[num] + imin + 1400 - pre_list.length + 101;
+    return arr2[num] + imin;
 }
 window.addEventListener('keydown', function (e) {
     //console.log(e.keyCode);

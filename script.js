@@ -74,6 +74,7 @@ window.addEventListener('keydown', function (e) {
     if (e.keyCode === 86) speak();
     if (e.keyCode === 82) random(omin.value, omax.value);
     if (e.keyCode === 77) fnWordList();
+    if (e.keyCode === 70) search();
 }, false);
 window.addEventListener('click', function (e) {
     let posX = event.clientX;
@@ -230,7 +231,7 @@ function operate() {
         })
     } else {
         Swal.fire({
-            title: '上一個 [⇽]<br>上一個 [⇾]<br>發音 [V]<br>標記 [M]<br>隨機排序 [R]',
+            title: '上一個 [⇽]<br>上一個 [⇾]<br>發音 [V]<br>標記 [M]<br>搜尋 [F]<br>隨機排序 [R]',
             showClass: {
                 popup: 'animate__animated animate__fadeInDown'
             },
@@ -250,6 +251,7 @@ function search(vocab) {
         preConfirm: () => {
             let str = "";
             var search = document.getElementById("search").value;
+            search=strFilter(search);
             if (search==="") return;
             const result = pre_list.filter((value) => value.match(search));
             const seq = pre_list.filter((value) => value.match(search));
@@ -268,7 +270,10 @@ function search(vocab) {
         }
     })
 }
-
+function strFilter(str) { 
+    var pattern=/[`~!@#$^&*()=|{}':;',\\\[\]\.<>\/?~！@#￥……&*（）——|{}【】'；：""'。，、？]/g;
+    return str.replace(pattern,"");
+  } 
 function detectmob() {
     if (navigator.userAgent.match(/Android/i)
         || navigator.userAgent.match(/webOS/i)

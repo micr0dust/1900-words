@@ -13,7 +13,6 @@ let omax = document.getElementById("max");
 let wordList = [];
 let word;
 let autoSay = false;
-let sound = false;
 random(omin.value, omax.value);
 function random(min, max) {
     var arr1 = [];
@@ -180,18 +179,7 @@ function print(clear) {
 }
 
 //感謝分享! https://gist.github.com/Eotones/d67be7262856a79a77abeeccef455ebf
-function speak(status) {
-    if (status) {
-        if (sound) {
-            sound = false;
-            document.getElementById('oSound').innerHTML = "已靜音";
-        } else {
-            sound = true;
-            if (detectmob()) return document.getElementById('oSound').innerHTML = "上滑發音";
-            document.getElementById('oSound').innerHTML = "可發音";
-        }
-    }
-    if (!sound) return;
+function speak() {
     let reqword = text.innerHTML;
     if (!reqword) reqword = "What the heck is that?";
     const synth = window.speechSynthesis;
@@ -253,6 +241,35 @@ function operate() {
         })
     }
 }
+function search(vocab) {
+    swal.fire({
+        title: '搜尋',
+        html:
+            '<input id="search" class="swal2-input">',
+        showCancelButton: true,
+        focusConfirm: false,
+        preConfirm: () => {
+            let str = "";
+            var search = document.getElementById("search").value;
+            if (search==="") return;
+            const result = pre_list.filter((value) => value.match(search));
+            const seq = pre_list.filter((value) => value.match(search));
+            for (let i = 0; i < result.length; i++) {
+                for (let j = 0; j < pre_list.length; j++) {
+                    if (pre_list[j]===result[i]) {
+                        str += "["+ j + "] " + result[i] + "<br>";
+                        break;
+                    }
+                }
+            }
+            swal.fire({
+                title: str,
+                text: '搜尋結果'
+            })
+        }
+    })
+}
+
 function detectmob() {
     if (navigator.userAgent.match(/Android/i)
         || navigator.userAgent.match(/webOS/i)

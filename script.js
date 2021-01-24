@@ -22,7 +22,8 @@ function random(min, max) {
     min = Math.abs(parseInt(min));
     max = Math.abs(parseInt(max));
     if (!min) min = 1;
-    if (!max) max = pre_list.length - 1;
+    if (!max||max>1900) max = pre_list.length - 1;
+    if(min>1900) min = pre_list.length - 1;
     if (min > max) {
         testValue = max;
         max = min;
@@ -265,7 +266,7 @@ function search(vocab) {
             }
             swal.fire({
                 title: str,
-                text: '搜尋結果'
+                text: '搜尋結果('+result.length+')'
             })
         }
     })

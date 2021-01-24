@@ -13,6 +13,7 @@ let omax = document.getElementById("max");
 let wordList = [];
 let word;
 let autoSay = false;
+let mode = "暗色模式";
 random(omin.value, omax.value);
 function random(min, max) {
     var arr1 = [];
@@ -22,8 +23,8 @@ function random(min, max) {
     min = Math.abs(parseInt(min));
     max = Math.abs(parseInt(max));
     if (!min) min = 1;
-    if (!max||max>1900) max = pre_list.length - 1;
-    if(min>1900) min = pre_list.length - 1;
+    if (!max || max > 1900) max = pre_list.length - 1;
+    if (min > 1900) min = pre_list.length - 1;
     if (min > max) {
         testValue = max;
         max = min;
@@ -228,6 +229,17 @@ function operate() {
             },
             hideClass: {
                 popup: 'animate__animated animate__fadeOutUp'
+            },
+            confirmButtonText: mode,
+            cancelButtonText: '了解',
+            showCancelButton: true,
+            preConfirm: () => {
+                darkmode.toggle();
+                if (mode==="暗色模式") {
+                    mode="亮色模式"
+                }else{
+                    mode="暗色模式"
+                }
             }
         })
     } else {
@@ -238,6 +250,17 @@ function operate() {
             },
             hideClass: {
                 popup: 'animate__animated animate__fadeOutUp'
+            },
+            confirmButtonText: mode,
+            cancelButtonText: '了解',
+            showCancelButton: true,
+            preConfirm: () => {
+                darkmode.toggle();
+                if (mode==="暗色模式") {
+                    mode="亮色模式"
+                }else{
+                    mode="暗色模式"
+                }
             }
         })
     }
@@ -252,29 +275,29 @@ function search(vocab) {
         preConfirm: () => {
             let str = "";
             var search = document.getElementById("search").value;
-            search=strFilter(search);
-            if (search==="") return;
+            search = strFilter(search);
+            if (search === "") return;
             const result = pre_list.filter((value) => value.match(search));
             const seq = pre_list.filter((value) => value.match(search));
             for (let i = 0; i < result.length; i++) {
                 for (let j = 0; j < pre_list.length; j++) {
-                    if (pre_list[j]===result[i]) {
-                        str += "["+ j + "] " + result[i] + "<br>";
+                    if (pre_list[j] === result[i]) {
+                        str += "[" + j + "] " + result[i] + "<br>";
                         break;
                     }
                 }
             }
             swal.fire({
                 title: str,
-                text: '搜尋結果('+result.length+')'
+                text: '搜尋結果(' + result.length + ')'
             })
         }
     })
 }
-function strFilter(str) { 
-    var pattern=/[`~!@#$^&*()=|{}':;',\\\[\]\.<>\/?~！@#￥……&*（）——|{}【】'；：""'。，、？]/g;
-    return str.replace(pattern,"");
-  } 
+function strFilter(str) {
+    var pattern = /[`~!@#$^&*()=|{}':;',\\\[\]\.<>\/?~！@#￥……&*（）——|{}【】'；：""'。，、？]/g;
+    return str.replace(pattern, "");
+}
 function detectmob() {
     if (navigator.userAgent.match(/Android/i)
         || navigator.userAgent.match(/webOS/i)

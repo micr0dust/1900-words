@@ -230,16 +230,11 @@ function operate() {
             hideClass: {
                 popup: 'animate__animated animate__fadeOutUp'
             },
-            confirmButtonText: mode,
+            confirmButtonText: '🌓',
             cancelButtonText: '了解',
             showCancelButton: true,
             preConfirm: () => {
                 darkmode.toggle();
-                if (mode==="暗色模式") {
-                    mode="亮色模式"
-                }else{
-                    mode="暗色模式"
-                }
             }
         })
     } else {
@@ -251,16 +246,11 @@ function operate() {
             hideClass: {
                 popup: 'animate__animated animate__fadeOutUp'
             },
-            confirmButtonText: mode,
+            confirmButtonText: '🌓',
             cancelButtonText: '了解',
             showCancelButton: true,
             preConfirm: () => {
                 darkmode.toggle();
-                if (mode==="暗色模式") {
-                    mode="亮色模式"
-                }else{
-                    mode="暗色模式"
-                }
             }
         })
     }

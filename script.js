@@ -232,7 +232,7 @@ function operate() {
         })
     } else {
         Swal.fire({
-            title: '上一個 [⇽]<br>上一個 [⇾]<br>發音 [V]<br>標記 [M]<br>搜尋 [F]<br>隨機排序 [R]',
+            title: '上一個 [⇽]<br>下一個 [⇾]<br>發音 [V]<br>標記 [M]<br>搜尋 [F]<br>隨機排序 [R]',
             showClass: {
                 popup: 'animate__animated animate__fadeInDown'
             },
